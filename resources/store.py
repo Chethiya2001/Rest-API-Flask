@@ -1,12 +1,12 @@
 import uuid
 
-from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 
 from db import stores
+from schema import StoreSchema
 
-blp = Blueprint("stores", __name__, discription="Operations on Stores")
+blp = Blueprint("stores", __name__)
 
 
 @blp.route("/stores/<string:store_id>")
@@ -30,8 +30,8 @@ class StoreList(MethodView):
     def get(self):
         return {"stores": list(stores.values())}
 
-    def post(self):
-        data = request.get_json()
+    @blp.arguments(StoreSchema)
+    def post(self, data):
         store_id = uuid.uuid4().hex
         store = {**data, "id": store_id}
         stores[store_id] = store
