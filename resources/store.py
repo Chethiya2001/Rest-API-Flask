@@ -27,10 +27,12 @@ class Store(MethodView):
 
 @blp.route("/store")
 class StoreList(MethodView):
+    @blp.response(200,StoreSchema(many=True))
     def get(self):
-        return {"stores": list(stores.values())}
+        return stores.values()
 
     @blp.arguments(StoreSchema)
+    @blp.response(201,StoreSchema)
     def post(self, data):
         store_id = uuid.uuid4().hex
         store = {**data, "id": store_id}
